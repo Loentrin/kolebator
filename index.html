@@ -5,6 +5,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title></title>
 <style>
+body{
+
+}
 #c{
 	position: fixed;
 	transform: translate(-50%, -50%);
@@ -150,9 +153,19 @@ function f1(t){
 	return (Math.exp(-g*t)*(a*Math.exp(t*Math.sqrt(g*g-w0*w0)) + b*Math.exp(-t*Math.sqrt(g*g-w0*w0))))*(-100)
 }
 
+function f3(t){
+	t /= 12
+	return (a+b*t)*Math.exp(-g*t)*(-100)
+}
+
 function df(t){
 	t /= 12
-	return (-a*Math.exp(-g*t)*(g*Math.cos(w*t+phi) + w*Math.sin(w*t+phi)))*(-100)
+	return (-a*Math.exp(-g*t)*(g*Math.cos(w*t+phi) - w*Math.sin(w*t+phi)))*(-100)
+}
+
+function df3(t){
+	t /= 12
+	return Math.exp(-g*t)*(-a*g-b*g*t+b)*(-100)
 }
 
 function df1(t){
@@ -364,24 +377,32 @@ function draw(){
 		while(i < 6000){
 			i+=step
 			ctx.beginPath()
-			if(w0 >= g){
+			if(w0 > g){
 				ctx.moveTo((i-step) + c.width/2+100, f(i-step) + c.height/2)
 				ctx.lineTo(i + c.width/2+100, f(i) + c.height/2)
 			} 
-			else{
+			else if(w0 < g){
 				ctx.moveTo(i-step + c.width/2+100, f1(i-step) + c.height/2)
 				ctx.lineTo(i + c.width/2+100, f1(i) + c.height/2)
 			} 
+			else{
+				ctx.moveTo(i-step + c.width/2+100, f3(i-step) + c.height/2)
+				ctx.lineTo(i + c.width/2+100, f3(i) + c.height/2)
+			}
 			ctx.stroke()
 			ctx.beginPath()
-			if(w0 >= g){
+			if(w0 > g){
 				ctx.moveTo(f((i-step)*3) + c.width/4, df((i-step)*3) + c.height/2)
 				ctx.lineTo(f(i*3) + c.width/4, df(i*3) + c.height/2)
 			} 
-			else{
+			else if(w0 < g){
 				ctx.moveTo(f1((i-step)*3) + c.width/4, df1((i-step)*3) + c.height/2)
 				ctx.lineTo(f1(i*3) + c.width/4, df1(i*3) + c.height/2)
 			} 
+			else{
+				ctx.moveTo(f3((i-step)*3) + c.width/4, df3((i-step)*3) + c.height/2)
+				ctx.lineTo(f3(i*3) + c.width/4, df3(i*3) + c.height/2)
+			}
 			ctx.stroke()
 		}
 	}
